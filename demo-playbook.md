@@ -1,14 +1,5 @@
 # Demo Playbook: quarkus-json-rpc
 
-## Pre-demo Setup
-
-Have a basic Quarkus app ready (just `quarkus-arc` + optionally a REST endpoint). Make sure `quarkus-json-rpc` is **not** added yet — you'll add it live.
-
-Add this to `application.properties` ahead of time so the Dev UI JSON-RPC log is visible:
-```properties
-quarkus.dev-ui.show-json-rpc-log=true
-```
-
 Start the app with `mvn quarkus:dev`.
 
 ---
@@ -107,7 +98,7 @@ Start the app with `mvn quarkus:dev`.
    }
 
    public String greetPerson(Person person) {
-       return "Hello " + person.getName() + ", age " + person.getAge();
+       return "Hello " + person.name() + ", age " + person.age();
    }
    ```
 
@@ -174,7 +165,7 @@ Start the app with `mvn quarkus:dev`.
 5. Create `src/main/resources/web/app/greeting-app.js`:
    ```javascript
    import { LitElement, html } from 'lit';
-   import { GreetingService } from '@quarkiverse/json-rpc-api';
+   import { GreetingResource } from '@quarkiverse/json-rpc-api';
 
    class GreetingApp extends LitElement {
        static properties = {
@@ -187,11 +178,11 @@ Start the app with `mvn quarkus:dev`.
        }
 
        async _greet() {
-           this._result = await GreetingService.hello({ name: 'Demo' });
+           this._result = await GreetingResource.hello({ name: 'Demo' });
        }
 
        async _createPerson() {
-           const person = await GreetingService.createPerson({ name: 'Alice', age: 30 });
+           const person = await GreetingResource.createPerson({ name: 'Alice', age: 30 });
            this._result = JSON.stringify(person, null, 2);
        }
 

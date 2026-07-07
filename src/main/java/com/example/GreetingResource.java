@@ -1,16 +1,31 @@
 package com.example;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import io.quarkiverse.jsonrpc.api.JsonRPCApi;
+import io.smallrye.mutiny.Multi;
+import java.time.Duration;
 
-@Path("/hello")
+@JsonRPCApi
 public class GreetingResource {
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Hello from Quarkus REST";
+        return "Hello from Quarkus JSON-RPC";
     }
+    
+    public String hello(String name) {
+        return "Hello " + name;
+    }
+    
+    public Multi<String> countdown(String name) {
+       return Multi.createFrom().ticks().every(Duration.ofSeconds(1))
+               .select().first(5)
+               .onItem().transform(n -> "(" + (5 - n) + ") Hello " + name);
+   }
+    
+   public Person createPerson(String name, int age) {
+       return new Person(name, age);
+   }
+
+   public String greetPerson(Person person) {
+       return "Hello " + person.name() + ", age " + person.age();
+   } 
 }
